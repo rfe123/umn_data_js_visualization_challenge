@@ -54,7 +54,7 @@ let selector = d3.select('#selDataset');
 let dataPromise = d3.json(url);
 
 const sampleData = {};
-const sampleMetadata = {}
+const sampleMetadata = {};
 
 dataPromise.then(function (data) {
     console.log(data);
