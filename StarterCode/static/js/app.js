@@ -6,10 +6,13 @@ let url = 'https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1
 // Function for Bar Chart init
 function createBarChart(chartData) {
     console.log(chartData);
+
+    let topNum = 10;
+
     let plotData = [{
-        x: chartData.sample_values,
-        y: chartData.otu_ids.map(x => 'OTU ' + x),
-        text: chartData.otu_labels.map(x => x.replace(/;/g, '<br>')),
+        x: chartData.sample_values.slice(0, topNum).reverse(),
+        y: chartData.otu_ids.slice(0, topNum).reverse().map(x => 'OTU ' + x),
+        text: chartData.otu_labels.slice(0, topNum).reverse().map(x => x.replace(/;/g, '<br>')),
         type: 'bar',
         orientation: 'h'
     }];
@@ -44,16 +47,10 @@ dataPromise.then(function (data) {
 
     data.names.map(k => { selector.append('option').attr('value', k).text(k) });
 
-    //Create a keyed Samples dictionary for lookup later - slicing top 10 samples
-    let topNum = 10;
+    //Create a keyed Samples dictionary for lookup later
 
     data.samples.forEach(entry => {
-        sampleData[entry.id] = {
-            id: entry.id,
-            sample_values: entry.sample_values.slice(0, topNum).reverse(),
-            otu_ids: entry.otu_ids.slice(0, topNum).reverse(),
-            otu_labels: entry.otu_labels.slice(0,topNum).reverse(),
-        }
+        sampleData[entry.id] = entry
     });
 
     //init the charts with first record
