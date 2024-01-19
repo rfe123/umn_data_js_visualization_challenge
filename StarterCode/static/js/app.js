@@ -7,6 +7,7 @@ let url = 'https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1
 function createBarChart(chartData) {
     console.log(chartData);
 
+    // control number of records - top 10. Slice each array for this many records and format
     let topNum = 10;
 
     let plotData = [{
@@ -26,31 +27,48 @@ function createBarChart(chartData) {
     };
 
     Plotly.newPlot('bar', plotData, layout);
+};
 
+function displayMetaData(thisData) {
+    //Select the div for Metadata
+    let metadataDiv = d3.select("#sample-metadata");
+    //Clear existing content
+    metadataDiv.selectAll('*').remove();
+
+    //Append <p>key: value </p> for each record of metadata
+    metadataDiv.selectAll('p')
+        .data(Object.entries(thisData))
+        .enter()
+        .append('p')
+        .text(d => `${d[0]}: ${d[1]}`);
 };
 
 // When selector is changed, populate the chart.
 function optionChanged(id) {
-    const chartData = sampleData[id];
-    createBarChart(chartData);
+    displayMetaData(sampleMetadata[id]);
+    createBarChart(sampleData[id]);
 };
 
 // Create a DataPromise to load JSON async
 let selector = d3.select('#selDataset');
 let dataPromise = d3.json(url);
 
-const sampleData = {}
+const sampleData = {};
+const sampleMetadata = {}
 
 dataPromise.then(function (data) {
+    console.log(data);
     // Append the ID names to the Selector
-    console.log(data.samples[0]);
-
     data.names.map(k => { selector.append('option').attr('value', k).text(k) });
 
-    //Create a keyed Samples dictionary for lookup later
+    //Create keyed Sample and MetaData dictionaries for lookup later
 
     data.samples.forEach(entry => {
-        sampleData[entry.id] = entry
+        sampleData[entry.id] = entry;
+    });
+
+    data.metadata.forEach(entry => {
+        sampleMetadata[entry.id] = entry;
     });
 
     //init the charts with first record
