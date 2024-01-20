@@ -22,6 +22,7 @@ function createBarChart(chartData) {
 
     let layout = {
         title: `ID ${chartData.id} Sample Data`,
+        bargap: 0.5,
         xaxis: { title: 'Count' },
         yaxis: { title: 'OTU IDs' }
     };
