@@ -5,7 +5,7 @@ let url = 'https://2u-data-curriculum-team.s3.amazonaws.com/dataviz-classroom/v1
 
 // Function for Bar Chart init
 function createBarChart(chartData) {
-    console.log(chartData);
+    //console.log(chartData);
 
     // control number of records - top 10. Slice each array for this many records and format
     let topNum = 10;
@@ -18,7 +18,7 @@ function createBarChart(chartData) {
         orientation: 'h'
     }];
 
-    console.log(plotData);
+    //console.log(plotData);
 
     let layout = {
         title: `ID ${chartData.id} Sample Data`,
@@ -43,10 +43,32 @@ function displayMetaData(thisData) {
         .text(d => `${d[0]}: ${d[1]}`);
 };
 
+function createBubbleChart(chartData) {
+    let plotData = [{
+        x: chartData.otu_ids,
+        y: chartData.sample_values,
+        text: chartData.otu_labels.map(x => x.replace(/;/g, '<br>')),
+        mode: 'markers',
+        marker: {
+            size: chartData.sample_values,
+            color: chartData.sample_values
+        }
+    }]; 
+
+    console.log(plotData);
+
+    let layout = {
+        title: `ID ${chartData.id}`
+    };
+
+    Plotly.newPlot('bubble', plotData, layout);
+};
+
 // When selector is changed, populate the chart.
 function optionChanged(id) {
     displayMetaData(sampleMetadata[id]);
     createBarChart(sampleData[id]);
+    createBubbleChart(sampleData[id]);
 };
 
 // Create a DataPromise to load JSON async
