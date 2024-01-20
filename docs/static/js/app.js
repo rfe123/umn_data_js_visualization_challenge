@@ -52,11 +52,11 @@ function createBubbleChart(chartData) {
         mode: 'markers',
         marker: {
             size: chartData.sample_values,
-            color: chartData.sample_values
+            color: chartData.otu_ids.map(x => x-940)
         }
     }]; 
 
-    console.log(plotData);
+    //console.log(plotData);
 
     let layout = {
         title: `ID ${chartData.id}`
@@ -65,11 +65,31 @@ function createBubbleChart(chartData) {
     Plotly.newPlot('bubble', plotData, layout);
 };
 
+function createGauge(chartData) {
+    console.log(chartData);
+    let plotData = [{
+        type: 'indicator',
+        mode: 'gauge+number',
+        value: chartData.wfreq,
+        gauge: {
+          axis: { range: [null, 10] },
+          bar: { color: 'darkblue' },
+          bgcolor: 'lightgray',
+          borderwidth: 2,
+          bordercolor: 'gray'
+        }
+      }];
+
+    Plotly.newPlot('gauge', plotData);
+      
+};
+
 // When selector is changed, populate the chart.
 function optionChanged(id) {
     displayMetaData(sampleMetadata[id]);
     createBarChart(sampleData[id]);
     createBubbleChart(sampleData[id]);
+    createGauge(sampleMetadata[id]);
 };
 
 // Create a DataPromise to load JSON async
@@ -80,7 +100,7 @@ const sampleData = {};
 const sampleMetadata = {};
 
 dataPromise.then(function (data) {
-    console.log(data);
+    //console.log(data);
     // Append the ID names to the Selector
     data.names.map(k => { selector.append('option').attr('value', k).text(k) });
 
