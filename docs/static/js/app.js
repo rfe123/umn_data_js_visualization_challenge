@@ -73,14 +73,22 @@ function createGauge(chartData) {
         value: chartData.wfreq,
         gauge: {
           axis: { range: [null, 10] },
+          steps: [
+            {range: [0,4], 'color': 'lightgreen'},
+            {range: [3,7], 'color': 'tan'},
+            {range: [7,10], 'color': 'darkgreen'}
+          ],
           bar: { color: 'darkblue' },
-          bgcolor: 'lightgray',
           borderwidth: 2,
           bordercolor: 'gray'
         }
-      }];
+    }];
 
-    Plotly.newPlot('gauge', plotData);
+    let layout = {
+        title: "Washes Per Week"
+    }
+
+    Plotly.newPlot('gauge', plotData, layout);
       
 };
 
